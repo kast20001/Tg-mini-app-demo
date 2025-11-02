@@ -1,0 +1,9 @@
+:root {
+    --bg-color: #787878;
+    --accent-color: #FF0070;
+    --font-family: 'IBM Plex Mono', monospace;
+    --font-size-base: 20px;
+    --h1-size: 116px;
+    --h1-color: #00C8BE;
+    --font-color: #000028;
+}
