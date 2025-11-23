@@ -195,14 +195,14 @@ li {
 }
 
 .result-time {
-  margin: -1.4rem 0 1rem 0;
+  margin: -1.4rem 0 1.2rem 0;
   font-size: 0.98rem;
   color: var(--font-color);
 }
 
 .result-container {
   width: 18rem;
-  height: 22rem;
+  height: 22.2rem;
   background-color: var(--bg-results-container-color);
   border-radius: 15px;
   text-align: center;
@@ -230,7 +230,7 @@ li {
 }
 
 .answers-grid {
-  margin: 0.4rem 0 1.1rem 0;
+  margin: 0.5rem 0 1.1rem 0;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0.9rem;
@@ -261,7 +261,7 @@ li {
   display: flex;
   justify-content: center;
   gap: 15px;
-  margin-top: 2.9rem;
+  margin-top: 2.2rem;
   flex-wrap: wrap;
 }
 
