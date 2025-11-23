@@ -1,9 +1,13 @@
 :root {
-    --bg-color: #2F304E;
+    --bg-color: #32324E;
     --accent-color: #FF0070;
     --font-family: 'Khula', monospace;
     --font-size-base: 20px;
     --h1-size: 64px;
     --h1-color: #F4F1EA;
-    --font-color: #2F304E;
+    --font-color: #E9E5DF;
+    --bg-results-container-color: #E9E5DF;
+    --bg-answer: #D9D9D9;
+    --right-answer: #83C7AF;
+    --wrong-answer: #C78383;
 }
