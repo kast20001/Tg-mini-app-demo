@@ -38,4 +38,23 @@ answerItems.forEach((item, index) => {
         iconElement.innerHTML = '<img src="../Vis_content/Owl.svg" alt="Нормально">';
     } else {
         iconElement.innerHTML = '<img src="../Vis_content/Wilted_rose.svg" alt="Плохо">';
-    }});
+    }
+});
+
+// Обработчики кнопок результатов
+const buttons = document.querySelectorAll('.result-buttons-container .btn');
+if (buttons.length >= 1) {
+    buttons[0].addEventListener('click', function() {
+        window.location.href = '../../index.html';
+    });
+}
+if (buttons.length >= 2) {
+    buttons[1].addEventListener('click', function() {
+        window.location.href = '../Tests/Tests_prob.html';
+    });
+}
+if (buttons.length >= 3) {
+    buttons[2].addEventListener('click', function() {
+        window.location.href = '../Task_content/Task_content.html?question=1';
+    });
+}

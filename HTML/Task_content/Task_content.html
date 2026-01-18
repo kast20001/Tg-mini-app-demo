@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Основы теории вероятностей</title>
+    <!-- Import IBM Plex Mono from Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #787878;
+        --accent-color: #ff0070;
+        --font-family: "IBM Plex Mono", monospace;
+        --font-size-base: 20px;
+        --h1-size: 116px;
+        --h1-color: #00c8be;
+        --font-color: #000028;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-family);
+        background-color: var(--bg-color);
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .test-container {
+        width: 100%;
+        max-width: 600px;
+        background-color: #f0ede9;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-size: var(--font-size-base);
+        position: relative;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--font-color);
+      }
+
+      .title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--font-color);
+      }
+
+      .question-info {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .question-number {
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        color: var(--font-color);
+      }
+
+      .hint-button {
+        background-color: var(--font-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        outline: none;
+      }
+
+      .hint-button:hover {
+        background-color: #00001a;
+        transform: translateY(-1px);
+      }
+
+      .task-text {
+        background-color: #fff;
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        text-align: center;
+        font-size: var(--font-size-base);
+        color: var(--font-color);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+
+      .option {
+        background-color: #fff;
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-size: var(--font-size-base);
+        color: var(--font-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: relative;
+      }
+
+      .option:hover {
+        background-color: #f8f8fa;
+        transform: translateY(-1px);
+      }
+
+      .option-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-right: 12px;
+        line-height: 1.4;
+      }
+
+      .option-text.expanded {
+        white-space: normal;
+        word-wrap: break-word;
+      }
+
+      .expand-icon {
+        width: 24px;
+        height: 24px;
+        fill: var(--font-color);
+        opacity: 0.5;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .option:hover .expand-icon {
+        opacity: 1;
+      }
+
+      .expand-icon.visible {
+        opacity: 1;
+      }
+
+      .navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+      }
+
+      .nav-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background-color: var(--font-color);
+        color: white;
+        border-radius: 8px;
+        font-size: var(--font-size-base);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border: none;
+        outline: none;
+      }
+
+      .nav-button:hover {
+        background-color: #00001a;
+        transform: translateY(-1px);
+      }
+
+      .nav-button:active {
+        transform: translateY(0);
+      }
+
+      .arrow {
+        font-size: 18px;
+      }
+
+      /* Стили для модального окна подсказки */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background-color: #f0ede9;
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease;
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid var(--font-color);
+      }
+
+      .modal-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--font-color);
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--font-color);
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .close-button:hover {
+        color: #3a3a3a;
+        transform: scale(1.1);
+      }
+
+      .modal-body {
+        font-size: var(--font-size-base);
+        color: var(--font-color);
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <div class="header">
+        <div class="title">Основы теории вероятностей</div>
+      </div>
+
+      <div class="question-info">
+        <div class="question-number">Вопрос №1</div>
+        <button class="hint-button">Подсказка</button>
+      </div>
+
+      <div class="task-text">Текст задачи</div>
+
+      <div class="options">
+        <div class="option">
+          <div class="option-text">
+            Вариант ответа с очень длинным текстом, который не помещается в одну
+            строку и требует раскрытия для полного просмотра. Этот текст
+            специально сделан длинным для демонстрации функциональности
+            раскрытия.
+          </div>
+          <svg class="expand-icon" viewBox="0 0 24 24">
+            <path
+              d="M12 4l8 8-8 8"
+              stroke="#000028"
+              stroke-width="2"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <div class="option">
+          <div class="option-text">Вариант ответа</div>
+          <svg class="expand-icon" viewBox="0 0 24 24">
+            <path
+              d="M12 4l8 8-8 8"
+              stroke="#000028"
+              stroke-width="2"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <div class="option">
+          <div class="option-text">Вариант ответа</div>
+          <svg class="expand-icon" viewBox="0 0 24 24">
+            <path
+              d="M12 4l8 8-8 8"
+              stroke="#000028"
+              stroke-width="2"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <div class="option">
+          <div class="option-text">Вариант ответа</div>
+          <svg class="expand-icon" viewBox="0 0 24 24">
+            <path
+              d="M12 4l8 8-8 8"
+              stroke="#000028"
+              stroke-width="2"
+              fill="none"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <div class="navigation">
+        <button class="nav-button" id="prevBtn">
+          <span class="arrow">←</span>
+          Назад
+        </button>
+        <button class="nav-button" id="nextBtn">
+          Вперед
+          <span class="arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Модальное окно подсказки -->
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">Подсказка</div>
+          <button class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">Текст подсказки</div>
+      </div>
+    </div>
+    <!-- Сначала файл с вопросами -->
+    <script src="../../Backend/question_data_mock.js"></script>
+    <script src="task_content.js"></script>
+    <!-- И файл с анимацией загрузки -->
+    <script src="../../Backend/download.js"></script>
+
+    <script>
+      // Динамически создаем варианты ответов
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof questions !== "undefined") {
+          const optionsContainer = document.getElementById("options-container");
+          const questionNumber = getCurrentQuestionNumber();
+          const currentQuestion = questions.find(
+            (q) => q.number === questionNumber,
+          );
+
+          if (optionsContainer && currentQuestion) {
+            // Здесь можно добавить варианты ответов для каждого вопроса
+            // Например, если в объекте вопроса есть поле options
+            const options = currentQuestion.options || [
+              "0,3",
+              "0,25",
+              "0,5",
+              "0,33",
+            ];
+
+            options.forEach((optionText, index) => {
+              const optionDiv = document.createElement("div");
+              optionDiv.className = "option";
+              optionDiv.innerHTML = `
+                    <div class="option-text">${optionText}</div>
+                    <svg class="expand-icon" viewBox="0 0 24 24">
+                        <path d="M12 4l8 8-8 8" stroke="#000028" stroke-width="2" fill="none"/>
+                    </svg>
+                `;
+              optionsContainer.appendChild(optionDiv);
+            });
+
+            // После добавления элементов, инициализируем их
+            if (typeof initExpandableOptions === "function") {
+              initExpandableOptions();
+            }
+            if (typeof initOptionSelection === "function") {
+              initOptionSelection();
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
