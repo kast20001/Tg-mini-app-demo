@@ -362,7 +362,7 @@ li {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,#32324E 100%, #eeD9D9D9 20%);
+  background: linear-gradient(135deg, #32324e 100%, #eed9d9d9 20%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -458,4 +458,23 @@ li {
 .content.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+.answer-status {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.answer-correct {
+  background-color: var(--correct-color);
+  color: white;
+}
+
+.answer-incorrect {
+  background-color: var(--incorrect-color);
+  color: white;
 }

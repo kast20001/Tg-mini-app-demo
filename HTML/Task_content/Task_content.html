@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
@@ -18,6 +18,8 @@
         --h1-size: 116px;
         --h1-color: #00c8be;
         --font-color: #000028;
+        --correct-color: #4CAF50;
+        --incorrect-color: #f44336;
       }
 
       * {
@@ -64,6 +66,32 @@
         color: var(--font-color);
       }
 
+      .progress-container {
+        margin: 20px 0;
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+        height: 20px;
+        position: relative;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #0d6efd, #6610f2);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #495057;
+        font-weight: 500;
+        font-size: 12px;
+      }
+
       .question-info {
         display: flex;
         justify-content: space-between;
@@ -104,6 +132,7 @@
         font-size: var(--font-size-base);
         color: var(--font-color);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        line-height: 1.5;
       }
 
       .options {
@@ -133,16 +162,38 @@
         transform: translateY(-1px);
       }
 
-      .option-text {
+      .option.selected {
+        background-color: #e3f2fd;
+        border: 2px solid #0d6efd;
+      }
+
+      .option.correct {
+        background-color: #e8f5e9;
+        border: 2px solid var(--correct-color);
+      }
+
+      .option.incorrect {
+        background-color: #ffebee;
+        border: 2px solid var(--incorrect-color);
+      }
+
+      .option input[type="radio"] {
+        margin-right: 10px;
+        transform: scale(1.2);
+        display: none; /* Скрываем стандартный radio button */
+      }
+
+      .option-label {
         flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         margin-right: 12px;
         line-height: 1.4;
+        cursor: pointer;
       }
 
-      .option-text.expanded {
+      .option-label.expanded {
         white-space: normal;
         word-wrap: break-word;
       }
@@ -195,6 +246,28 @@
 
       .nav-button:active {
         transform: translateY(0);
+      }
+
+      .nav-button:disabled {
+        background-color: #adb5bd;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .nav-button.prev-btn {
+        background-color: #6c757d;
+      }
+
+      .nav-button.prev-btn:hover:not(:disabled) {
+        background-color: #5c636a;
+      }
+
+      .nav-button.next-btn {
+        background-color: #198754;
+      }
+
+      .nav-button.next-btn:hover:not(:disabled) {
+        background-color: #157347;
       }
 
       .arrow {
@@ -285,134 +358,97 @@
       </div>
 
       <div class="question-info">
-        <div class="question-number">Вопрос №1</div>
-        <button class="hint-button">Подсказка</button>
+        <div id="question-number" class="question-number">Вопрос №1</div>
+        <button class="hint-button" id="hint-btn">Подсказка</button>
       </div>
 
-      <div class="task-text">Текст задачи</div>
+      <div id="question-text" class="task-text">Текст задачи</div>
 
-      <div class="options">
-        <div class="option">
-          <div class="option-text">
-            Вариант ответа с очень длинным текстом, который не помещается в одну
-            строку и требует раскрытия для полного просмотра. Этот текст
-            специально сделан длинным для демонстрации функциональности
-            раскрытия.
-          </div>
-          <svg class="expand-icon" viewBox="0 0 24 24">
-            <path
-              d="M12 4l8 8-8 8"
-              stroke="#000028"
-              stroke-width="2"
-              fill="none"
-            />
-          </svg>
-        </div>
-        <div class="option">
-          <div class="option-text">Вариант ответа</div>
-          <svg class="expand-icon" viewBox="0 0 24 24">
-            <path
-              d="M12 4l8 8-8 8"
-              stroke="#000028"
-              stroke-width="2"
-              fill="none"
-            />
-          </svg>
-        </div>
-        <div class="option">
-          <div class="option-text">Вариант ответа</div>
-          <svg class="expand-icon" viewBox="0 0 24 24">
-            <path
-              d="M12 4l8 8-8 8"
-              stroke="#000028"
-              stroke-width="2"
-              fill="none"
-            />
-          </svg>
-        </div>
-        <div class="option">
-          <div class="option-text">Вариант ответа</div>
-          <svg class="expand-icon" viewBox="0 0 24 24">
-            <path
-              d="M12 4l8 8-8 8"
-              stroke="#000028"
-              stroke-width="2"
-              fill="none"
-            />
-          </svg>
-        </div>
+      <div id="options-container" class="options">
+        <!-- Варианты ответов будут добавлены через JavaScript -->
       </div>
 
       <div class="navigation">
-        <button class="nav-button" id="prevBtn">
+        <button class="nav-button prev-btn" id="prevBtn">
           <span class="arrow">←</span>
           Назад
         </button>
-        <button class="nav-button" id="nextBtn">
+        <button class="nav-button next-btn" id="nextBtn">
           Вперед
           <span class="arrow">→</span>
         </button>
       </div>
     </div>
 
-    <!-- Модальное окно подсказки -->
-    <div class="modal-overlay">
+    <!-- Модальное окно для подсказки -->
+    <div class="modal-overlay" id="hintModal">
       <div class="modal-content">
         <div class="modal-header">
           <div class="modal-title">Подсказка</div>
-          <button class="close-button">&times;</button>
+          <button class="close-button" id="closeHintModal">×</button>
         </div>
-        <div class="modal-body">Текст подсказки</div>
+        <div class="modal-body" id="hintText">
+          Текст подсказки будет загружен здесь...
+        </div>
       </div>
     </div>
-    <!-- Сначала файл с вопросами -->
-    <script src="../../Backend/question_data_mock.js"></script>
+    
     <script src="task_content.js"></script>
-    <!-- И файл с анимацией загрузки -->
-    <script src="../../Backend/download.js"></script>
-
     <script>
-      // Динамически создаем варианты ответов
-      document.addEventListener("DOMContentLoaded", function () {
-        if (typeof questions !== "undefined") {
-          const optionsContainer = document.getElementById("options-container");
-          const questionNumber = getCurrentQuestionNumber();
-          const currentQuestion = questions.find(
-            (q) => q.number === questionNumber,
-          );
-
-          if (optionsContainer && currentQuestion) {
-            // Здесь можно добавить варианты ответов для каждого вопроса
-            // Например, если в объекте вопроса есть поле options
-            const options = currentQuestion.options || [
-              "0,3",
-              "0,25",
-              "0,5",
-              "0,33",
-            ];
-
-            options.forEach((optionText, index) => {
-              const optionDiv = document.createElement("div");
-              optionDiv.className = "option";
-              optionDiv.innerHTML = `
-                    <div class="option-text">${optionText}</div>
-                    <svg class="expand-icon" viewBox="0 0 24 24">
-                        <path d="M12 4l8 8-8 8" stroke="#000028" stroke-width="2" fill="none"/>
-                    </svg>
-                `;
-              optionsContainer.appendChild(optionDiv);
-            });
-
-            // После добавления элементов, инициализируем их
-            if (typeof initExpandableOptions === "function") {
-              initExpandableOptions();
-            }
-            if (typeof initOptionSelection === "function") {
-              initOptionSelection();
+      // JS для управления раскрытием текста вариантов
+      document.addEventListener('DOMContentLoaded', function() {
+        // Делегируем обработку кликов на контейнер опций
+        document.getElementById('options-container').addEventListener('click', function(e) {
+          // Обработка клика на иконку раскрытия
+          if (e.target.closest('.expand-icon')) {
+            const option = e.target.closest('.option');
+            const label = option.querySelector('.option-label');
+            label.classList.toggle('expanded');
+            
+            // Поворачиваем иконку
+            const icon = e.target.closest('.expand-icon');
+            icon.style.transform = label.classList.contains('expanded') ? 'rotate(90deg)' : 'rotate(0deg)';
+          }
+          
+          // Обработка клика на сам вариант (кроме иконки)
+          if (e.target.closest('.option') && !e.target.closest('.expand-icon')) {
+            const option = e.target.closest('.option');
+            const radio = option.querySelector('input[type="radio"]');
+            if (radio) {
+              radio.checked = true;
+              // Триггерим событие change для сохранения ответа
+              radio.dispatchEvent(new Event('change'));
             }
           }
+        });
+
+        // Управление модальным окном подсказки
+        const hintBtn = document.getElementById('hint-btn');
+        const hintModal = document.getElementById('hintModal');
+        const closeHintModal = document.getElementById('closeHintModal');
+
+        if (hintBtn && hintModal) {
+          hintBtn.addEventListener('click', function() {
+            hintModal.classList.add('active');
+          });
+        }
+
+        if (closeHintModal && hintModal) {
+          closeHintModal.addEventListener('click', function() {
+            hintModal.classList.remove('active');
+          });
+        }
+
+        // Закрытие модального окна при клике на оверлей
+        if (hintModal) {
+          hintModal.addEventListener('click', function(e) {
+            if (e.target === hintModal) {
+              hintModal.classList.remove('active');
+            }
+          });
         }
       });
+      console.log('Task_content.html загружен');
     </script>
   </body>
 </html>
