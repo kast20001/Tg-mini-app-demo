@@ -33,8 +33,7 @@ function displayResults() {
 function displayTime() {
     const timeElement = document.getElementById('resultTime');
     if (timeElement) {
-        // Если у вас есть таймер, добавьте его сюда
-        // Пока просто ставим заглушку
+        // У нас пока нет норм таймера, поэтому просто заглушка, потом обновим
         timeElement.textContent = 'Время прохождения: --:--';
     }
 }
