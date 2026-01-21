@@ -235,6 +235,7 @@ function addResultStyles() {
         
         .question-modal-content {
             line-height: 1.6;
+            color: rgb(51, 51, 51);
         }
         
         .question-modal-content p {
